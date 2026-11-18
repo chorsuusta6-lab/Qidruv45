@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Ijara Boshqaruv</title>
+<link rel="manifest" href='data:application/manifest+json,{"name":"Ijara Boshqaruv","short_name":"Ijara","start_url":"./index.html","display":"standalone","background_color":"%230f172a","theme_color":"%236366f1","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect fill=%22%236366f1%22 width=%22512%22 height=%22512%22 rx=%2296%22/><text x=%22256%22 y=%22350%22 font-size=%22300%22 text-anchor=%22middle%22 fill=%22white%22>🏠</text></svg>","sizes":"512x512","type":"image/svg+xml"}]}'>
+<style>
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#334155;--border:#334155;
+  --primary:#6366f1;--primary-h:#818cf8;
+  --success:#22c55e;--warn:#f59e0b;--danger:#ef4444;
+  --text:#e2e8f0;--muted:#94a3b8;
+}
+body.light{
+  --bg:#f1f5f9;--surface:#ffffff;--surface2:#f8fafc;--border:#e2e8f0;
+  --primary:#4f46e5;--primary-h:#6366f1;
+  --success:#16a34a;--warn:#d97706;--danger:#dc2626;
+  --text:#0f172a;--muted:#64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:system-ui,-apple-system,sans-serif}
+body{background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s;padding-bottom:env(safe-area-inset-bottom)}
+input,select,textarea,button{font-family:inherit;font-size:15px;color:var(--text)}
+input,select,textarea{width:100%;padding:12px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--primary)}
+textarea{resize:vertical;min-height:60px}
+button{cursor:pointer;border:none;background:none}
+.btn{padding:12px 18px;border-radius:12px;background:var(--primary);color:#fff;font-weight:600;transition:transform .1s,background .2s;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn:active{transform:scale(.97)}
+.btn.sec{background:var(--surface2);color:var(--text)}
+.btn.danger{background:var(--danger)}
+.btn.ok{background:var(--success)}
+.btn.warn{background:var(--warn)}
+.btn.sm{padding:8px 12px;font-size:13px;border-radius:10px}
+.btn.fw{width:100%}
+.header{padding:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:0;z-index:10}
+.header h1{font-size:18px;font-weight:700}
+.header .back{font-size:22px;padding:6px;color:var(--text)}
+.container{padding:16px;max-width:720px;margin:0 auto}
+.card{background:var(--surface);border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+.row{display:flex;gap:10px;align-items:center}
+.row.between{justify-content:space-between}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.muted{color:var(--muted);font-size:13px}
+.bold{font-weight:700}
+.success{color:var(--success)}.warn{color:var(--warn)}.danger{color:var(--danger)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.stat{text-align:center;padding:12px;background:var(--surface2);border-radius:12px}
+.stat .n{font-size:22px;font-weight:800;display:block}
+.stat .l{font-size:11px;color:var(--muted);margin-top:2px;display:block}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.tenant{display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface2);border-radius:14px;margin-bottom:8px;flex-wrap:wrap}
+.tenant .info{flex:1;min-width:150px}
+.tenant .name{font-weight:600;margin-bottom:2px}
+.tenant .meta{font-size:12px;color:var(--muted)}
+.tenant .actions{display:flex;gap:6px;flex-wrap:wrap}
+.pill{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;display:inline-block}
+.pill.ok{background:rgba(34,197,94,.15);color:var(--success)}
+.pill.warn{background:rgba(245,158,11,.15);color:var(--warn)}
+.pill.danger{background:rgba(239,68,68,.15);color:var(--danger)}
+.bottom{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--surface);border-top:1px solid var(--border);padding-bottom:env(safe-area-inset-bottom);z-index:20}
+.bottom button{flex:1;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);font-size:11px;font-weight:600;transition:color .2s}
+.bottom button.active{color:var(--primary)}
+.bottom button .ic{font-size:20px}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:50;animation:fade .2s}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;animation:up .25s}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
+.tabs button{padding:8px 14px;border-radius:999px;background:var(--surface2);color:var(--muted);font-size:13px;font-weight:600;white-space:nowrap}
+.tabs button.active{background:var(--primary);color:#fff}
+.img-prev{width:80px;height:80px;border-radius:12px;object-fit:cover;background:var(--surface2);border:2px dashed var(--border)}
+.img-slot{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.thumb{width:80px;height:80px;border-radius:12px;object-fit:cover;background:var(--surface2)}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.fab{position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));right:16px;width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;font-size:26px;box-shadow:0 6px 20px rgba(99,102,241,.5);z-index:15;display:flex;align-items:center;justify-content:center}
+.kv{background:var(--surface);border-radius:16px;padding:16px;margin-bottom:12px;cursor:pointer;transition:transform .1s;border:1px solid var(--border)}
+.kv:active{transform:scale(.99)}
+.kv h3{font-size:16px;margin-bottom:8px}
+.kv .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0;text-align:center}
+.kv .stats .s{padding:8px 4px;background:var(--surface2);border-radius:10px}
+.kv .stats .s b{display:block;font-size:16px;font-weight:800}
+.kv .stats .s span{font-size:10px;color:var(--muted)}
+.kv .footer{display:flex;gap:6px;margin-top:10px}
+.nav-row{background:var(--surface2);border-radius:12px;padding:12px;margin-bottom:8px}
+.ball-bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-top:6px}
+.ball-bar div{height:100%;background:var(--danger);transition:width .3s}
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--surface2);color:var(--text);padding:12px 20px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:100;font-weight:500;animation:fade .2s}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+<div id="modal-root"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   IJARA BOSHQARUV PWA — Single File
+   ═══════════════════════════════════════════════════════ */
+
+// ─── STATE ─────────────────────────────────────────────
+const state = {
+  kvs: [], ijarachilar: [], tolovlar: [], xarajatlar: [],
+  navbatlar: [], ballar: {}, currentKvId: null, currentTab: 0,
+};
+
+// ─── UTILS ─────────────────────────────────────────────
+const $ = s => document.querySelector(s);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const today = () => { const d=new Date(); return d.toISOString().slice(0,10); };
+const fmt = n => (Math.round(n)||0).toLocaleString('ru-RU');
+const daysInMonth = (y,m) => new Date(y,m+1,0).getDate();
+const dayDiff = (a,b) => Math.round((new Date(b)-new Date(a))/86400000);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg){
+  const t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);setTimeout(()=>t.remove(),2000);
+}
+function downloadBlob(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+// ─── DB (IndexedDB) ────────────────────────────────────
+const DB = {
+  db: null,
+  open(){return new Promise((res,rej)=>{
+    const req=indexedDB.open('ijara_db',1);
+    req.onupgradeneeded=e=>{
+      const db=e.target.result;
+      ['kv','ijarachilar','tolovlar','xarajatlar','navbat','rasmlar'].forEach(s=>{
+        if(!db.objectStoreNames.contains(s)) db.createObjectStore(s,{keyPath:'id'});
+      });
+    };
+    req.onsuccess=e=>{DB.db=e.target.result;res();};
+    req.onerror=rej;
+  });},
+  all(store){return new Promise(r=>{
+    const req=DB.db.transaction(store).objectStore(store).getAll();
+    req.onsuccess=()=>r(req.result||[]);
+  });},
+  get(store,id){return new Promise(r=>{
+    const req=DB.db.transaction(store).objectStore(store).get(id);
+    req.onsuccess=()=>r(req.result);
+  });},
+  put(store,obj){return new Promise(r=>{
+    const req=DB.db.transaction(store,'readwrite').objectStore(store).put(obj);
+    req.onsuccess=()=>r(obj);
+  });},
+  del(store,id){return new Promise(r=>{
+    const req=DB.db.transaction(store,'readwrite').objectStore(store).delete(id);
+    req.onsuccess=()=>r();
+  });}
+};
+
+// ─── SETTINGS (localStorage) ───────────────────────────
+const Settings = {
+  get theme(){return localStorage.getItem('theme')||'dark';},
+  set theme(v){localStorage.setItem('theme',v);applyTheme();},
+};
+function applyTheme(){document.body.classList.toggle('light',Settings.theme==='light');}
+
+// ─── IMAGE PROCESSING ──────────────────────────────────
+function processImage(file,maxSize=1024,quality=0.8){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        let {width:w,height:h}=img;
+        if(w>maxSize||h>maxSize){
+          const scale=Math.min(maxSize/w,maxSize/h);
+          w=Math.round(w*scale);h=Math.round(h*scale);
+        }
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        c.toBlob(b=>res(b),'image/jpeg',quality);
+      };
+      img.onerror=rej;
+      img.src=r.result;
+    };
+    r.onerror=rej;
+    r.readAsDataURL(file);
+  });
+}
+async function saveImage(file){
+  const blob=await processImage(file);
+  const id='img_'+uid();
+  await DB.put('rasmlar',{id,blob});
+  return id;
+}
+async function getImageURL(id){
+  if(!id) return null;
+  const rec=await DB.get('rasmlar',id);
+  if(!rec||!rec.blob) return null;
+  return URL.createObjectURL(rec.blob);
+}
+
+// ─── BALANS HISOBLASH ──────────────────────────────────
+function dailyRate(ij,date=new Date()){
+  const m=date.getMonth(),y=date.getFullYear();
+  return ij.oylikTolov/daysInMonth(y,m);
+}
+function processDeductions(ij){
+  const t=today();
+  if(!ij.lastDeductionDate){ ij.lastDeductionDate=t; return false; }
+  if(ij.lastDeductionDate>=t) return false;
+  let bal=ij.balans||0;
+  const cursor=new Date(ij.lastDeductionDate);cursor.setDate(cursor.getDate()+1);
+  const end=new Date(t);
+  let changed=false;
+  while(cursor<=end){
+    const m=cursor.getMonth(),y=cursor.getFullYear();
+    bal-=ij.oylikTolov/daysInMonth(y,m);
+    changed=true;
+    cursor.setDate(cursor.getDate()+1);
+  }
+  ij.balans=bal;
+  ij.lastDeductionDate=t;
+  return changed;
+}
+function daysLeft(ij){
+  const rate=dailyRate(ij);
+  if(rate<=0) return 999;
+  return Math.floor((ij.balans||0)/rate);
+}
+function tenantStatus(ij){
+  if((ij.balans||0)<0) return 'danger';
+  const dl=daysLeft(ij);
+  if(dl<5) return 'warn';
+  return 'ok';
+}
+function overdueMonths(ij){
+  if((ij.balans||0)>=0||!ij.oylikTolov) return 0;
+  return Math.floor(Math.abs(ij.balans)/ij.oylikTolov);
+}
+
+// ─── LOAD ALL ──────────────────────────────────────────
+async function loadAll(){
+  state.kvs=await DB.all('kv');
+  state.ijarachilar=await DB.all('ijarachilar');
+  state.tolovlar=await DB.all('tolovlar');
+  state.xarajatlar=await DB.all('xarajatlar');
+  state.navbatlar=await DB.all('navbat');
+  const balls=await DB.all('ballar');
+  state.ballar={};
+  balls.forEach(b=>state.ballar[b.id]=b.qiymat);
+  // auto-deduct & save
+  for(const ij of state.ijarachilar){
+    if(ij.holat!=='chiqdi' && processDeductions(ij)){
+      await DB.put('ijarachilar',ij);
+    }
+  }
+}
+
+// ─── AVTO XARAJAT (KV to'lov sanasi) ───────────────────
+async function processAutoExpenses(){
+  const now=new Date();const t=today();
+  const thisMonth=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  for(const kv of state.kvs){
+    if(!kv.tolovKuni||!kv.ijaraSumma) continue;
+    const expDate=`${thisMonth}-${String(kv.tolovKuni).padStart(2,'0')}`;
+    if(expDate>t) continue;
+    const exists=state.xarajatlar.some(x=>x.kvId===kv.id&&x.manba==='avto'&&x.oy===thisMonth);
+    if(!exists){
+      const exp={id:'x_'+uid(),kvId:kv.id,summa:kv.ijaraSumma,sana:expDate,
+                 kategoriya:'ijara',izoh:`${kv.nomi} — oylik ijara`,manba:'avto',oy:thisMonth};
+      await DB.put('xarajatlar',exp);
+      state.xarajatlar.push(exp);
+    }
+  }
+}
+
+// ─── BALL ──────────────────────────────────────────────
+async function addBall(ijarachiId,delta){
+  const cur=state.ballar[ijarachiId]||0;
+  const nv=Math.max(0,cur+delta);
+  state.ballar[ijarachiId]=nv;
+  await DB.put('ballar',{id:ijarachiId,qiymat:nv});
+}
+function hulqLabel(bal){
+  if(bal<=1) return {t:"🟢 A'lo",c:'ok'};
+  if(bal<=3) return {t:'🟡 Yaxshi',c:'warn'};
+  if(bal<=6) return {t:"🟠 O'rtacha",c:'warn'};
+  if(bal<=9) return {t:'🔴 Yomon',c:'danger'};
+  return {t:'⚫ Juda yomon',c:'danger'};
+}
+
+// ─── NAVBAT JADVAL ─────────────────────────────────────
+function buildNavbat(nv,ijarachilar,ballar){
+  if(!ijarachilar.length||!nv.vazifalar.length) return [];
+  // Ballari eng yuqori birinchi
+  const tartib=[...ijarachilar].sort((a,b)=>(ballar[b.id]||0)-(ballar[a.id]||0));
+  // Ballari -1 ga kamaytirish
+  tartib.forEach(ij=>{
+    const b=ballar[ij.id]||0;
+    if(b>0) ballar[ij.id]=b-1;
+  });
+  const jadval=[];
+  const n=tartib.length,t=nv.vazifalar.length;
+  let sana=new Date(nv.boshlanishSana);
+  const totalCycles=50;
+  for(let sikl=0;sikl<totalCycles;sikl++){
+    for(let i=0;i<n;i++){
+      const ij=tartib[(i+sikl)%n];
+      const vazifa=nv.vazifalar[(i+sikl)%t];
+      jadval.push({
+        id:'n_'+uid(),
+        sana:sana.toISOString().slice(0,10),
+        ijarachiId:ij.id,
+        vazifa,
+        holat:'kutilmoqda'
+      });
+      sana.setDate(sana.getDate()+1);
+    }
+    sana.setDate(sana.getDate()+Math.max(1,nv.davrKun-n));
+  }
+  return jadval;
+}
+
+// ─── NAVBAT AMAL ───────────────────────────────────────
+async function navbatAction(nv,item,action){
+  const ij=state.ijarachilar.find(x=>x.id===item.ijarachiId);
+  if(!ij) return;
+  if(action==='ok'){
+    item.holat='bajarildi';
+  } else if(action==='swap'){
+    item.holat='almashtirildi';
+    await addBall(ij.id,+1);
+  } else if(action==='fail'){
+    item.holat='bajarilmadi';
+    await addBall(ij.id,+2);
+  }
+  await DB.put('navbat',nv);
+  toast(action==='ok'?'✅ Bajardi':action==='swap'?'🔄 Almashtirildi (+1 ball)':'❌ Bajarmadi (+2 ball)');
+}
+
+// ─── CSV / XLS EXPORT ──────────────────────────────────
+function exportCsv(filename,rows){
+  const csv='\uFEFF'+rows.map(r=>r.map(c=>`"${String(c??'').replace(/"/g,'""')}"`).join(';')).join('\r\n');
+  downloadBlob(new Blob([csv],{type:'text/csv;charset=utf-8'}),filename);
+}
+function exportXls(filename,tableHtml,title){
+  const style=`<style>
+    body{font-family:Arial,sans-serif;padding:20px}
+    h2{color:#4f46e5}
+    table{border-collapse:collapse;margin:10px 0;width:100%}
+    th{background:#6366f1;color:#fff;padding:10px 14px;text-align:left;font-weight:700}
+    td{border:1px solid #ddd;padding:8px 14px}
+    tr:nth-child(even) td{background:#f8fafc}
+    .ok{color:#16a34a;font-weight:bold}
+    .warn{color:#d97706;font-weight:bold}
+    .danger{color:#dc2626;font-weight:bold}
+  </style>`;
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8">${style}</head><body><h2>${title}</h2>${tableHtml}</body></html>`;
+  downloadBlob(new Blob([html],{type:'application/vnd.ms-excel'}),filename);
+}
+
+// ─── VIEW: HOME (KV ro'yxati) ──────────────────────────
+async function renderHome(){
+  const kvs=state.kvs;
+  const cards=kvs.map(kv=>{
+    const tenants=state.ijarachilar.filter(ij=>ij.kvId===kv.id&&ij.holat!=='chiqdi');
+    const count=tenants.length;
+    const now=new Date();
+    const thisMonth=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    const paid=tenants.filter(ij=>state.tolovlar.some(t=>t.ijarachiId===ij.id&&t.sana.startsWith(thisMonth))).length;
+    const near=tenants.filter(ij=>{const s=tenantStatus(ij);return s==='warn';}).length;
+    const debt=tenants.filter(ij=>(ij.balans||0)<0).length;
+    const overdue=tenants.reduce((s,ij)=>s+overdueMonths(ij),0);
+    const tushum=state.tolovlar.filter(t=>t.sana.startsWith(thisMonth)&&tenants.some(ij=>ij.id===t.ijarachiId)).reduce((s,t)=>s+t.summa,0);
+    const xarajat=state.xarajatlar.filter(x=>x.kvId===kv.id&&x.sana.startsWith(thisMonth)).reduce((s,x)=>s+x.summa,0);
+    const foyda=tushum-xarajat;
+    return `<div class="kv" onclick="openKv('${kv.id}')">
+      <div class="row between">
+        <h3>🏠 ${esc(kv.nomi)}</h3>
+        <span class="muted">👥 ${count}/${kv.sigim||'?'}</span>
+      </div>
+      <div class="stats">
+        <div class="s"><b>${count}</b><span>Ijarachi</span></div>
+        <div class="s"><b class="success">${paid}</b><span>To'lagan</span></div>
+        <div class="s"><b class="warn">${near}</b><span>Yaqin 5k</span></div>
+        <div class="s"><b class="danger">${debt}</b><span>Qarzdor</span></div>
+      </div>
+      <div class="row between muted" style="margin-top:4px;font-size:12px">
+        <span>Ijara: <b class="bold">${fmt(kv.ijaraSumma)}</b></span>
+        <span>Tushum: <b class="bold success">${fmt(tushum)}</b></span>
+      </div>
+      <div class="row between" style="margin-top:4px">
+        <span class="muted" style="font-size:12px">Foyda:</span>
+        <span class="bold ${foyda>=0?'success':'danger'}">${foyda>=0?'+':''}${fmt(foyda)}</span>
+      </div>
+      ${overdue>0?`<div class="muted" style="font-size:11px;margin-top:4px">⚠️ O'tib ketgan: ${overdue} oy</div>`:''}
+      <div class="footer" onclick="event.stopPropagation()">
+        <button class="btn sm sec" onclick="editKv('${kv.id}')">✏️ Tahrir</button>
+        <button class="btn sm danger" onclick="deleteKv('${kv.id}')">🗑 O'chir</button>
+        <button class="btn sm" onclick="openKv('${kv.id}')" style="flex:1">➡️ Kirish</button>
+      </div>
+    </div>`;
+  }).join('');
+  return `
+    <div class="header">
+      <h1>🏠 Mening Kvartiralarim</h1>
+      <button class="btn sm" onclick="editKv()">+ KV</button>
+    </div>
+    <div class="container">
+      ${cards||'<div class="empty">Hali kvartira yo\'q.<br><br><button class="btn" onclick="editKv()">+ Birinchi kvartirani qo\'shish</button></div>'}
+    </div>`;
+}
+
+// ─── KV CRUD ───────────────────────────────────────────
+function editKv(id){
+  const kv=id?state.kvs.find(k=>k.id===id):{nomi:'',sigim:4,ijaraSumma:0,tolovKuni:5};
+  openModal(`
+    <div class="modal">
+      <div class="row between" style="margin-bottom:16px">
+        <h2 style="font-size:18px">${id?'Tahrirlash':'Yangi kvartira'}</h2>
+        <button onclick="closeModal()">✖</button>
+      </div>
+      <div class="field"><label>Nomi</label><input id="kv-nomi" value="${esc(kv.nomi)}" placeholder="1-xonadon"></div>
+      <div class="field"><label>Sig'imi (nechi kishi)</label><input id="kv-sigim" type="number" value="${kv.sigim||4}"></div>
+      <div class="field"><label>Ijara to'lovi (umumiy, so'm)</label><input id="kv-ijara" type="number" value="${kv.ijaraSumma||0}"></div>
+      <div class="field"><label>To'lov sanasi (oyning kuni)</label><input id="kv-kun" type="number" min="1" max="31" value="${kv.tolovKuni||5}"></div>
+      <button class="btn fw" style="margin-top:8px" onclick="saveKv(${id?`'${id}'`:'null'})">💾 Saqlash</button>
+    </div>`);
+}
+async function saveKv(id){
+  const nomi=$('#kv-nomi').value.trim();
+  if(!nomi){toast('Nom kiriting');return;}
+  const obj={
+    id:id||('kv_'+uid()),
+    nomi,
+    sigim:+$('#kv-sigim').value||1,
+    ijaraSumma:+$('#kv-ijara').value||0,
+    tolovKuni:+$('#kv-kun').value||1,
+    yaratilgan:today()
+  };
+  await DB.put('kv',obj);
+  closeModal();await loadAll();render();toast('Saqlandi');
+}
+async function deleteKv(id){
+  if(!confirm('O\'chirilsinmi? Ijarachilar ham o\'chadi!')) return;
+  await DB.del('kv',id);
+  for(const ij of state.ijarachilar.filter(x=>x.kvId===id)) await DB.del('ijarachilar',ij.id);
+  await loadAll();render();toast('O\'chirildi');
+}
+
+// ─── OPEN KV (5 tab) ───────────────────────────────────
+async function openKv(id){
+  state.currentKvId=id;state.currentTab=0;
+  render();
+}
+
+// ─── VIEW: KV DETAIL (tabs) ────────────────────────────
+async function renderKvDetail(){
+  const kv=state.kvs.find(k=>k.id===state.currentKvId);
+  if(!kv){state.currentKvId=null;return renderHome();}
+  const tabs=['📊 Ma\'lumot','👥 Ijarachilar','💰 Xarajat','🧹 Navbat','⚙️ Sozlama'];
+  const tab=state.currentTab;
+  let content='';
+  if(tab===0) content=renderTab1(kv);
+  else if(tab===1) content=renderTab2(kv);
+  else if(tab===2) content=renderTab3(kv);
+  else if(tab===3) content=renderTab4(kv);
+  else content=renderTab5(kv);
+  return `
+    <div class="header">
+      <button class="back" onclick="state.currentKvId=null;render()">←</button>
+      <h1>${esc(kv.nomi)}</h1>
+      <div style="width:36px"></div>
+    </div>
+    <div class="container" style="padding-bottom:100px">
+      ${content}
+    </div>
+    <div class="bottom">
+      ${tabs.map((t,i)=>`<button class="${i===tab?'active':''}" onclick="state.currentTab=${i};render()">
+        <span class="ic">${t.split(' ')[0]}</span>
+        <span>${t.split(' ').slice(1).join(' ')}</span>
+      </button>`).join('')}
+    </div>`;
+}
+
+// ─── TAB 1: KV MA'LUMOT ────────────────────────────────
+function renderTab1(kv){
+  const all=state.ijarachilar.filter(ij=>ij.kvId===kv.id&&ij.holat!=='chiqdi');
+  const debt=all.filter(ij=>(ij.balans||0)<0);
+  const near=all.filter(ij=>tenantStatus(ij)==='warn');
+  return `
+    <div class="grid3" style="margin-bottom:14px">
+      <div class="stat"><b class="n">${all.length}</b><span class="l">Ijarachi</span></div>
+      <div class="stat"><b class="n danger">${debt.length}</b><span class="l">Qarzdor</span></div>
+      <div class="stat"><b class="n warn">${near.length}</b><span class="l">Yaqin</span></div>
+    </div>
+    <h3 style="font-size:15px;margin:14px 0 10px">👥 Ijarachilar</h3>
+    ${all.length?all.map(ij=>tenantCard(ij)).join(''):'<div class="empty">Hali ijarachi yo\'q</div>'}
+    ${debt.length?`<h3 style="font-size:15px;margin:20px 0 10px">🔴 Qarzdorlar</h3>${debt.map(ij=>tenantCard(ij)).join('')}`:''}
+    ${near.length?`<h3 style="font-size:15px;margin:20px 0 10px">🟡 To'lovga 5 kun qoldi</h3>${near.map(ij=>tenantCard(ij)).join('')}`:''}
+  `;
+}
+async function tenantCard(ij){
+  const rasm=await getImageURL(ij.rasmId);
+  const st=tenantStatus(ij);
+  const dl=daysLeft(ij);
+  const bal=ij.balans||0;
+  let statusText='';
+  if(st==='danger') statusText=`${fmt(Math.abs(bal))} so'm qarz`;
+  else statusText=`${dl} kun yetadi`;
+  const avatar=rasm?`<img src="${rasm}">`:esc((ij.ism||'?')[0].toUpperCase());
+  return `<div class="tenant">
+    <div class="avatar">${avatar}</div>
+    <div class="info">
+      <div class="name">${esc(ij.ism)}</div>
+      <div class="meta">${esc(ij.xona||'')}-xona · ${esc(ij.karavot||'')}-karavot</div>
+      <span class="pill ${st}">${statusText}</span>
+    </div>
+    <div class="actions">
+      <a href="tel:${esc(ij.tel)}" class="btn sm sec">📞</a>
+      <button class="btn sm" onclick="payTenant('${ij.id}')">💵</button>
+    </div>
+  </div>`;
+}
+function payTenant(id){
+  const ij=state.ijarachilar.find(x=>x.id===id);
+  openModal(`
+    <div class="modal">
+      <div class="row between" style="margin-bottom:16px">
+        <h2 style="font-size:18px">💵 To'lov — ${esc(ij.ism)}</h2>
+        <button onclick="closeModal()">✖</button>
+      </div>
+      <div class="field"><label>Summa (so'm)</label><input id="pay-summa" type="number" value="${ij.oylikTolov||0}" autofocus></div>
+      <div class="field"><label>Sana</label><input id="pay-sana" type="date" value="${today()}"></div>
+      <div class="field"><label>Izoh</label><input id="pay-izoh" placeholder="masalan: fevral"></div>
+      <button class="btn fw" onclick="submitPayment('${id}')">✅ Qabul qilish</button>
+    </div>`);
+}
+async function submitPayment(id){
+  const summa=+$('#pay-summa').value;
+  if(!summa){toast('Summa kiriting');return;}
+  const t={id:'t_'+uid(),ijarachiId:id,summa,sana:$('#pay-sana').value||today(),izoh:$('#pay-izoh').value};
+  await DB.put('tolovlar',t);
+  const ij=state.ijarachilar.find(x=>x.id===id);
+  ij.balans=(ij.balans||0)+summa;
+  await DB.put('ijarachilar',ij);
+  await loadAll();closeModal();render();toast(`+${fmt(summa)} qo'shildi`);
+}
+
+// ─── TAB 2: IJARACHILAR CRUD ───────────────────────────
+function renderTab2(kv){
+  const list=state.ijarachilar.filter(ij=>ij.kvId===kv.id);
+  return `
+    <button class="btn fw" style="margin-bottom:14px" onclick="editTenant('${kv.id}')">+ Yangi ijarachi</button>
+    ${list.length?list.map(ij=>`
+      <div class="tenant">
+        <div class="avatar">${esc((ij.ism||'?')[0].toUpperCase())}</div>
+        <div class="info">
+          <div class="name">${esc(ij.ism)} ${ij.holat==='chiqdi'?'<span class="muted">(chiqdi)</span>':''}</div>
+          <div class="meta">${esc(ij.xona||'')}-xona · ${esc(ij.karavot||'')}-karavot · ${esc(ij.tel)}</div>
+        </div>
+        <div class="actions">
+          <button class="btn sm sec" onclick="editTenant('${kv.id}','${ij.id}')">✏️</button>
+          <button class="btn sm danger" onclick="deleteTenant('${ij.id}')">🗑</button>
+        </div>
+      </div>`).join(''):'<div class="empty">Hali ijarachi yo\'q</div>'}
+  `;
+}
+async function editTenant(kvId,id){
+  const ij=id?state.ijarachilar.find(x=>x.id===id):{
+    kvId,xona:'',karavot:'',ism:'',tel:'',oylikTolov:0,kelganSana:today(),izoh:'',holat:'aktiv'
+  };
+  const rasmURL=await getImageURL(ij.rasmId);
+  const pOldURL=await getImageURL(ij.pasportOldId);
+  const pOrqaURL=await getImageURL(ij.pasportOrqaId);
+  openModal(`
+    <div class="modal">
+      <div class="row between" style="margin-bottom:16px">
+        <h2 style="font-size:18px">${id?'Tahrirlash':'Yangi ijarachi'}</h2>
+        <button onclick="closeModal()">✖</button>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Xona</label><input id="ij-xona" value="${esc(ij.xona)}"></div>
+        <div class="field"><label>Karavot</label><input id="ij-karavot" value="${esc(ij.karavot)}"></div>
+      </div>
+      <div class="field"><label>Ismi</label><input id="ij-ism" value="${esc(ij.ism)}"></div>
+      <div class="field"><label>Telefon</label><input id="ij-tel" type="tel" value="${esc(ij.tel)}"></div>
+      <div class="field"><label>Oylik to'lovi (so'm)</label><input id="ij-tolov" type="number" value="${ij.oylikTolov||0}"></div>
+      <div class="field"><label>Kelgan sanasi</label><input id="ij-kelgan" type="date" value="${ij.kelganSana||today()}"></div>
+      <div class="field"><label>Izoh</label><textarea id="ij-izoh">${esc(ij.izoh||'')}</textarea></div>
+      <div class="row" style="gap:12px;margin:16px 0;flex-wrap:wrap">
+        <div class="img-slot">
+          <img id="prev-rasm" class="img-prev" src="${rasmURL||''}">
+          <label class="btn sm sec">📷 Rasm<input type="file" accept="image/*" capture="environment" style="display:none" onchange="pickImage(this,'rasm')"></label>
+        </div>
+        <div class="img-slot">
+          <img id="prev-pass-old" class="img-prev" src="${pOldURL||''}">
+          <label class="btn sm sec">📷 Pasport old<input type="file" accept="image/*" capture="environment" style="display:none" onchange="pickImage(this,'passOld')"></label>
+        </div>
+        <div class="img-slot">
+          <img id="prev-pass-orqa" class="img-prev" src="${pOrqaURL||''}">
+          <label class="btn sm sec">📷 Pasport orqa<input type="file" accept="image/*" capture="environment" style="display:none" onchange="pickImage(this,'passOrqa')"></label>
+        </div>
+      </div>
+      <button class="btn fw" onclick="saveTenant('${kvId}',${id?`'${id}'`:'null'})">💾 Saqlash</button>
+      ${id?`
+        <div class="row" style="gap:8px;margin-top:8px">
+          ${rasmURL?`<a class="btn sm sec" href="${rasmURL}" download="rasm.jpg" style="flex:1;text-decoration:none">⬇️ Rasm</a>`:''}
+          ${pOldURL?`<a class="btn sm sec" href="${pOldURL}" download="pasport-old.jpg" style="flex:1;text-decoration:none">⬇️ Old</a>`:''}
+          ${pOrqaURL?`<a class="btn sm sec" href="${pOrqaURL}" download="pasport-orqa.jpg" style="flex:1;text-decoration:none">⬇️ Orqa</a>`:''}
+        </div>
+      `:''}
+    </div>`);
+  window._pickFiles={};
+}
+async function pickImage(input,key){
+  if(!input.files[0]) return;
+  const id=await saveImage(input.files[0]);
+  window._pickFiles[key]=id;
+  const url=await getImageURL(id);
+  const map={rasm:'#prev-rasm',passOld:'#prev-pass-old',passOrqa:'#prev-pass-orqa'};
+  $(map[key]).src=url;
+}
+async function saveTenant(kvId,id){
+  const ism=$('#ij-ism').value.trim();
+  if(!ism){toast('Ism kiriting');return;}
+  const existing=id?state.ijarachilar.find(x=>x.id===id):{};
+  const obj={
+    id:id||('ij_'+uid()),
+    kvId,
+    xona:$('#ij-xona').value.trim(),
+    karavot:$('#ij-karavot').value.trim(),
+    ism,tel:$('#ij-tel').value.trim(),
+    oylikTolov:+$('#ij-tolov').value||0,
+    kelganSana:$('#ij-kelgan').value||today(),
+    izoh:$('#ij-izoh').value.trim(),
+    holat:existing.holat||'aktiv',
+    balans:existing.balans||0,
+    lastDeductionDate:existing.lastDeductionDate||today(),
+    rasmId:window._pickFiles?.rasm||existing.rasmId,
+    pasportOldId:window._pickFiles?.passOld||existing.pasportOldId,
+    pasportOrqaId:window._pickFiles?.passOrqa||existing.pasportOrqaId,
+  };
+  await DB.put('ijarachilar',obj);
+  await loadAll();closeModal();render();toast('Saqlandi');
+}
+async function deleteTenant(id){
+  if(!confirm('O\'chirilsinmi?')) return;
+  await DB.del('ijarachilar',id);
+  await loadAll();render();toast('O\'chirildi');
+}
+
+// ─── TAB 3: XARAJAT / HISOBOT ──────────────────────────
+function renderTab3(kv){
+  const now=new Date();
+  const thisMonth=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const exp=state.xarajatlar.filter(x=>x.kvId===kv.id).sort((a,b)=>b.sana.localeCompare(a.sana));
+  const pays=state.tolovlar.filter(t=>state.ijarachilar.some(ij=>ij.id===t.ijarachiId&&ij.kvId===kv.id)).sort((a,b)=>b.sana.localeCompare(a.sana));
+  const tushum=pays.filter(t=>t.sana.startsWith(thisMonth)).reduce((s,t)=>s+t.summa,0);
+  const xarajat=exp.filter(x=>x.sana.startsWith(thisMonth)).reduce((s,x)=>s+x.summa,0);
+  const foyda=tushum-xarajat;
+  return `
+    <div class="card">
+      <div class="row between" style="margin-bottom:10px">
+        <span>💵 Tushum</span><b class="success">${fmt(tushum)}</b>
+      </div>
+      <div class="row between" style="margin-bottom:10px">
+        <span>💸 Xarajat</span><b class="danger">${fmt(xarajat)}</b>
+      </div>
+      <div class="row between" style="padding-top:10px;border-top:1px solid var(--border)">
+        <span>📈 Foyda</span><b class="${foyda>=0?'success':'danger'}">${foyda>=0?'+':''}${fmt(foyda)}</b>
+      </div>
+    </div>
+    <div class="row" style="gap:8px;margin-bottom:14px">
+      <button class="btn sec" style="flex:1" onclick="addExpense('${kv.id}')">+ Xarajat</button>
+      <button class="btn sec" style="flex:1" onclick="exportXlsAll('${kv.id}')">📊 XLS</button>
+      <button class="btn sec" style="flex:1" onclick="exportCsvAll('${kv.id}')">📄 CSV</button>
+    </div>
+    <h3 style="font-size:14px;margin:14px 0 8px">💸 Xarajatlar</h3>
+    ${exp.length?exp.slice(0,20).map(x=>`
+      <div class="nav-row row between">
+        <div>
+          <div class="bold">${fmt(x.summa)}</div>
+          <div class="muted">${x.sana} · ${esc(x.kategoriya)} ${x.izoh?'· '+esc(x.izoh):''}</div>
+        </div>
+        <button class="btn sm danger" onclick="delExp('${x.id}')">🗑</button>
+      </div>`).join(''):'<div class="empty">Xarajat yo\'q</div>'}
+    <h3 style="font-size:14px;margin:14px 0 8px">💵 To'lov tarixi</h3>
+    ${pays.length?pays.slice(0,30).map(t=>{
+      const ij=state.ijarachilar.find(x=>x.id===t.ijarachiId);
+      return `<div class="nav-row row between">
+        <div>
+          <div class="bold">${fmt(t.summa)} <span class="muted">— ${esc(ij?.ism||'?')}</span></div>
+          <div class="muted">${t.sana}${t.izoh?' · '+esc(t.izoh):''}</div>
+        </div>
+      </div>`;
+    }).join(''):'<div class="empty">To\'lov yo\'q</div>'}
+  `;
+}
+function addExpense(kvId){
+  openModal(`
+    <div class="modal">
+      <div class="row between" style="margin-bottom:16px">
+        <h2 style="font-size:18px">💸 Xarajat qo'shish</h2>
+        <button onclick="closeModal()">✖</button>
+      </div>
+      <div class="field"><label>Summa</label><input id="x-summa" type="number" autofocus></div>
+      <div class="field"><label>Sana</label><input id="x-sana" type="date" value="${today()}"></div>
+      <div class="field"><label>Kategoriya</label>
+        <select id="x-kat">
+          <option>ijara</option><option>kommunal</option><option>ta'mirlash</option><option>boshqa</option>
+        </select>
+      </div>
+      <div class="field"><label>Izoh</label><input id="x-izoh"></div>
+      <button class="btn fw" onclick="saveExp('${kvId}')">Saqlash</button>
+    </div>`);
+}
+async function saveExp(kvId){
+  const summa=+$('#x-summa').value;
+  if(!summa){toast('Summa kiriting');return;}
+  const x={id:'x_'+uid(),kvId,summa,sana:$('#x-sana').value||today(),
+           kategoriya:$('#x-kat').value,izoh:$('#x-izoh').value.trim(),manba:'qolda'};
+  await DB.put('xarajatlar',x);
+  await loadAll();closeModal();render();toast('Saqlandi');
+}
+async function delExp(id){
+  if(!confirm('O\'chirilsinmi?')) return;
+  await DB.del('xarajatlar',id);
+  await loadAll();render();
+}
+async function exportXlsAll(kvId){
+  const kv=state.kvs.find(k=>k.id===kvId);
+  const tenants=state.ijarachilar.filter(ij=>ij.kvId===kvId);
+  let html=`<h3>Ijarachilar</h3><table><tr><th>Ism</th><th>Xona</th><th>Karavot</th><th>Tel</th><th>Balans</th><th>Qolgan kun</th></tr>`;
+  tenants.forEach(ij=>{
+    const st=tenantStatus(ij);
+    const cls=st==='danger'?'danger':st==='warn'?'warn':'ok';
+    html+=`<tr><td>${esc(ij.ism)}</td><td>${esc(ij.xona)}</td><td>${esc(ij.karavot)}</td><td>${esc(ij.tel)}</td><td class="${cls}">${fmt(ij.balans||0)}</td><td>${daysLeft(ij)}</td></tr>`;
+  });
+  html+='</table>';
+  const exp=state.xarajatlar.filter(x=>x.kvId===kvId);
+  html+='<h3>Xarajatlar</h3><table><tr><th>Sana</th><th>Kategoriya</th><th>Summa</th><th>Izoh</th></tr>';
+  exp.forEach(x=>{html+=`<tr><td>${x.sana}</td><td>${esc(x.kategoriya)}</td><td>${fmt(x.summa)}</td><td>${esc(x.izoh||'')}</td></tr>`;});
+  html+='</table>';
+  const pays=state.tolovlar.filter(t=>tenants.some(ij=>ij.id===t.ijarachiId));
+  html+='<h3>To\'lovlar</h3><table><tr><th>Sana</th><th>Ijarachi</th><th>Summa</th><th>Izoh</th></tr>';
+  pays.forEach(t=>{const ij=tenants.find(x=>x.id===t.ijarachiId);html+=`<tr><td>${t.sana}</td><td>${esc(ij?.ism||'')}</td><td>${fmt(t.summa)}</td><td>${esc(t.izoh||'')}</td></tr>`;});
+  html+='</table>';
+  exportXls(`${kv.nomi}-hisobot.xls`,html,`${kv.nomi} — Hisobot`);
+  toast('XLS yuklandi');
+}
+async function exportCsvAll(kvId){
+  const tenants=state.ijarachilar.filter(ij=>ij.kvId===kvId);
+  const rows=[['Sana','Tur','Kim','Summa','Izoh']];
+  tenants.forEach(ij=>rows.push([ij.kelganSana,'ijarachi',ij.ism,ij.oylikTolov,ij.izoh||'']));
+  state.xarajatlar.filter(x=>x.kvId===kvId).forEach(x=>rows.push([x.sana,'xarajat',x.kategoriya,x.summa,x.izoh||'']));
+  state.tolovlar.filter(t=>tenants.some(ij=>ij.id===t.ijarachiId)).forEach(t=>{
+    const ij=tenants.find(x=>x.id===t.ijarachiId);
+    rows.push([t.sana,'tolov',ij?.ism||'',t.summa,t.izoh||'']);
+  });
+  exportCsv(`kv-${kvId}.csv`,rows);
+  toast('CSV yuklandi');
+}
+
+// ─── TAB 4: NAVBAT ─────────────────────────────────────
+function renderTab4(kv){
+  const nv=state.navbatlar.find(n=>n.kvId===kv.id);
+  if(!nv){
+    return `<div class="card">
+      <h3 style="margin-bottom:12px">🧹 Navbatchilik jadvali</h3>
+      <div class="field"><label>Boshlanish sanasi</label><input id="nv-sana" type="date" value="${today()}"></div>
+      <div class="field"><label>Davr (necha kunda bir kunlik navbat)</label><input id="nv-davr" type="number" value="1" min="1"></div>
+      <div class="field"><label>Vazifalar (har biriga yangi qator)</label><textarea id="nv-vazifalar" placeholder="Supurgi&#10;Idish yuvish&#10;Chiqindi"></textarea></div>
+      <button class="btn fw" onclick="createNavbat('${kv.id}')">🔄 Jadval tuzish</button>
+    </div>`;
+  }
+  // Show navbat
+  const upcoming=nv.jadval.filter(j=>j.sana>=today()&&j.holat==='kutilmoqda').slice(0,10);
+  const tenants=state.ijarachilar.filter(ij=>ij.kvId===kv.id);
+  return `
+    <div class="card">
+      <div class="row between" style="margin-bottom:8px">
+        <b>🧹 Navbat jadvali</b>
+        <button class="btn sm danger" onclick="resetNavbat('${kv.id}')">🔄 Qaytadan</button>
+      </div>
+      <div class="muted" style="font-size:12px">
+        Boshlanish: ${nv.boshlanishSana} · Davr: ${nv.davrKun} kun · Vazifalar: ${nv.vazifalar.join(', ')}
+      </div>
+    </div>
+    <h3 style="font-size:14px;margin:12px 0 8px">📅 Navbatlar</h3>
+    ${upcoming.length?upcoming.map(j=>{
+      const ij=tenants.find(x=>x.id===j.ijarachiId);
+      return `<div class="nav-row">
+        <div class="row between" style="margin-bottom:8px">
+          <div><b>${esc(ij?.ism||'?')}</b> <span class="muted">— ${esc(j.vazifa)}</span></div>
+          <span class="muted" style="font-size:12px">${j.sana}</span>
+        </div>
+        <div class="row" style="gap:6px">
+          <button class="btn sm danger" onclick="navAct('${j.id}','fail')" style="flex:1">❌ Bajarmadi</button>
+          <button class="btn sm warn" onclick="navAct('${j.id}','swap')" style="flex:1">🔄 Almash</button>
+          <button class="btn sm ok" onclick="navAct('${j.id}','ok')" style="flex:1">✅ Bajardi</button>
+        </div>
+      </div>`;
+    }).join(''):'<div class="empty">Faol navbatlar yo\'q</div>'}
+    <h3 style="font-size:14px;margin:20px 0 8px">⭐ Ballar (hulq)</h3>
+    ${tenants.map(ij=>{
+      const b=state.ballar[ij.id]||0;
+      const h=hulqLabel(b);
+      return `<div class="nav-row">
+        <div class="row between">
+          <span>${esc(ij.ism)}</span>
+          <span class="bold ${h.c}">${b} — ${h.t}</span>
+        </div>
+        <div class="ball-bar"><div style="width:${Math.min(100,b*10)}%"></div></div>
+      </div>`;
+    }).join('')}
+  `;
+}
+async function createNavbat(kvId){
+  const vazifalar=$('#nv-vazifalar').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!vazifalar.length){toast('Kamida 1 vazifa');return;}
+  const nv={
+    id:'nv_'+uid(),kvId,
+    boshlanishSana:$('#nv-sana').value||today(),
+    davrKun:+$('#nv-davr').value||1,
+    vazifalar,
+    jadval:[]
+  };
+  const tenants=state.ijarachilar.filter(ij=>ij.kvId===kvId&&ij.holat!=='chiqdi');
+  nv.jadval=buildNavbat(nv,tenants,state.ballar);
+  // save updated ballar
+  for(const [id,q] of Object.entries(state.ballar)){
+    await DB.put('ballar',{id,qiymat:q});
+  }
+  await DB.put('navbat',nv);
+  await loadAll();render();toast('Jadval tuzildi');
+}
+async function navAct(itemId,action){
+  const nv=state.navbatlar.find(n=>n.kvId===state.currentKvId);
+  if(!nv) return;
+  const item=nv.jadval.find(j=>j.id===itemId);
+  if(!item) return;
+  await navbatAction(nv,item,action);
+  await loadAll();render();
+}
+async function resetNavbat(kvId){
+  if(!confirm('Navbat qaytadan tuzilsinmi?')) return;
+  const nv=state.navbatlar.find(n=>n.kvId===kvId);
+  if(nv) await DB.del('navbat',nv.id);
+  await loadAll();render();
+}
+
+// ─── TAB 5: SOZLAMALAR ─────────────────────────────────
+function renderTab5(kv){
+  const theme=Settings.theme;
+  return `
+    <div class="card">
+      <h3 style="margin-bottom:12px">🎨 Rejim</h3>
+      <div class="row" style="gap:8px">
+        <button class="btn ${theme==='dark'?'':'sec'}" style="flex:1" onclick="Settings.theme='dark'">🌙 Tungi</button>
+        <button class="btn ${theme==='light'?'':'sec'}" style="flex:1" onclick="Settings.theme='light'">☀️ Kunduzgi</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">💾 Backup</h3>
+      <button class="btn fw sec" style="margin-bottom:8px" onclick="exportBackup()">⬇️ JSON yuklab olish</button>
+      <label class="btn fw sec" style="cursor:pointer">
+        ⬆️ JSON tiklash
+        <input type="file" accept=".json" style="display:none" onchange="importBackup(this)">
+      </label>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">📱 PWA</h3>
+      <button class="btn fw sec" onclick="installPWA()">📲 Bosh ekranga o'rnatish</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-bottom:12px">🗑 Xavfli</h3>
+      <button class="btn fw danger" onclick="wipeAll()">Barcha ma'lumotni o'chirish</button>
+    </div>
+    <div class="card">
+      <div class="muted" style="font-size:12px;text-align:center">
+        Ijara Boshqaruv v1.0 · Barcha ma'lumot qurilmada saqlanadi<br>
+        Balans har kun avtomatik hisoblanadi
+      </div>
+    </div>
+  `;
+}
+async function exportBackup(){
+  const data={};
+  for(const s of ['kv','ijarachilar','tolovlar','xarajatlar','navbat']) data[s]=await DB.all(s);
+  downloadBlob(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),'ijara-backup.json');
+  toast('Backup yuklandi');
+}
+async function importBackup(input){
+  const file=input.files[0];if(!file) return;
+  const text=await file.text();
+  const data=JSON.parse(text);
+  for(const s of ['kv','ijarachilar','tolovlar','xarajatlar','navbat']){
+    if(data[s]) for(const o of data[s]) await DB.put(s,o);
+  }
+  await loadAll();render();toast('Tiklandi');
+}
+function installPWA(){ toast('Brauzer menyusidan "Add to Home Screen" ni tanlang'); }
+async function wipeAll(){
+  if(!confirm('HAMMA ma\'lumot o\'chiriladi! Davom etilsinmi?')) return;
+  if(!confirm('Aniq ishonchingiz komilmi?')) return;
+  for(const s of ['kv','ijarachilar','tolovlar','xarajatlar','navbat','rasmlar']){
+    for(const o of await DB.all(s)) await DB.del(s,o.id);
+  }
+  await loadAll();render();toast('Tozalandi');
+}
+
+// ─── MODAL ─────────────────────────────────────────────
+function openModal(html){
+  $('#modal-root').innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()">${html}</div>`;
+}
+function closeModal(){ $('#modal-root').innerHTML=''; }
+
+// ─── RENDER ────────────────────────────────────────────
+async function render(){
+  const html=state.currentKvId?await renderKvDetail():await renderHome();
+  $('#app').innerHTML=html;
+}
+
+// ─── INIT ──────────────────────────────────────────────
+(async function init(){
+  applyTheme();
+  await DB.open();
+  await loadAll();
+  await processAutoExpenses();
+  await loadAll();
+  await render();
+  // SW register
+  if('serviceWorker' in navigator){
+    try{ await navigator.serviceWorker.register('sw.js'); }catch(e){ console.warn('SW:',e); }
+  }
+})();
+
+// expose globals for onclick
+Object.assign(window,{
+  state,render,editKv,saveKv,deleteKv,openKv,
+  payTenant,submitPayment,editTenant,deleteTenant,saveTenant,pickImage,
+  addExpense,saveExp,delExp,exportXlsAll,exportCsvAll,
+  createNavbat,navAct,resetNavbat,
+  exportBackup,importBackup,installPWA,wipeAll,
+  closeModal,Settings,toast,
+});
+</script>
+</body>
+</html>
